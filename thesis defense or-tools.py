@@ -47,10 +47,22 @@ for j in range(K):
     model.Add(sum(y[i][j] for i in range(M)) >= c)
     model.Add(sum(y[i][j] for i in range(M)) <= d) 
 #độ tương đồng giữa các đồ án trong cùng 1 phòng phải lớn hơn e
+for k in range(K):
+    for i in range(N-1):
+        for j in range(i+1,N):
+            b = model.NewBoolVar('b')
+            model.Add(x[i][k]==x[j][k]==1).OnlyEnforceIf(b)
+            model.Add(C[i][j] >= e).OnlyEnforceIf(b)
 
 
 
 #độ tương đồng giữa giáo viên và đồ án trong cùng một phòng phải lớn hơn f
+for k in range(K):
+    for j in range(M):
+        for i in range(N):
+            b = model.NewBoolVar('b')
+            model.Add(y[j][k]==x[i][k]==1).OnlyEnforceIf(b)
+            model.Add(G[i][j] >= f).OnlyEnforceIf(b)
 
 #giáo viên hướng dẫn không ở chung phòng với đồ án mình hướng dẫn
 for k in range(K):
