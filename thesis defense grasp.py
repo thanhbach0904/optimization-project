@@ -48,6 +48,12 @@ def check(x,n,i,c,room,e,b):
                 check = False
     return check
 #Get better X
+def AllRoomHasOver_a_theses(k,dictionaries,a):
+    all_room_has_over_a_theses = True
+    for room in range(1,k+1):
+        if dictionaries[room] < a:
+            all_room_has_over_a_theses = False
+    return all_room_has_over_a_theses
 def GenerateBetterX(x):
     return x
 #generate Y
@@ -66,6 +72,10 @@ def checkY(x,y,i,teacher_dict,m,k,g,c,d,f,t):
         if g[thesis][teacher] < f:
             check = False
     #teacher can't be in the same room with their thesis
+    for j in range(len(t)):
+        if t[j] - 1 == teacher:
+            if x[j] == i:
+                check = False
     return check
 def Domain_of_Y(x,y,teachers_in_room,m,k,g,c,d,f,t):
     option = []
@@ -80,7 +90,13 @@ def getSum(k,teacher,x,g):
         if x[i] == k:
             s += g[i][teacher]
     return s
-        
+def AllRoomHasOver_c_teachers(k,dictionaries,c):
+    all_rooms_has_over_c_teachers = True
+    for room in range(1,k+1):
+        if dictionaries[room] < c:
+            all_rooms_has_over_c_teachers = False
+    return all_rooms_has_over_c_teachers
+
 def GenerateY(x,m,k,g,c,d,f,t):
     #x is the list that is being generated first
     #g is the similarity matrix
@@ -155,7 +171,7 @@ def main():
 
 
     #run for answer
-    iterations = 100
+    iterations = 1000
     target_sum = 0
     finalX = []
     finalY = []
@@ -163,8 +179,8 @@ def main():
         x0 = GenerateX([],N,K,C,e,a,b)
         if x0 != None:
             X = GenerateBetterX(x0)
-            Y,sumY = GenerateY(X,M,K,G,c,d,f,T)
-            if  Y != None:
+            if GenerateY(X,M,K,G,c,d,f,T) != None:
+                Y,sumY = GenerateY(X,M,K,G,c,d,f,T)
                 if Sum_XY(K,X,sumY,C) > target_sum:
                     target_sum = Sum_XY(K,X,sumY,C)
                     finalX = X
@@ -172,7 +188,7 @@ def main():
         #else skip
     Print_Solution(N,M,finalX,finalY)
     print()
-    print(Sum_XY(K,X,0,C))
+    print(target_sum)
 
     
 
