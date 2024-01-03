@@ -199,7 +199,7 @@ def main():
 
 
     #run for answer
-    iterations = 1000
+    iterations = 10
     target_sum = 0
     finalX = []
     finalY = []
