@@ -55,7 +55,9 @@ def AllRoomHasOver_a_theses(k,dictionaries,a):
             all_room_has_over_a_theses = False
     return all_room_has_over_a_theses
 def GenerateBetterX(x):
-    return x
+    if x != None:
+        return x
+    
 #generate Y
 def checkY(x,y,i,teacher_dict,m,k,g,c,d,f,t):
     check = True
@@ -114,21 +116,33 @@ def GenerateY(x,m,k,g,c,d,f,t):
         if len(y_domain) == 0 and i <= m -1:
             complete = False
         else:
-            best_option = []
-            for room in y_domain:
-                best_option.append((room,teachers_in_room[room]))
-            best_option = sorted(best_option,key = lambda x : x[1])
-            room_for_teacher = best_option[0][0]
-            expectsum = getSum(room_for_teacher,i,x,g)
-            teachers_in_room[best_option[0][0]] += 1
-            for room1 in range(1,len(best_option)):
-                if getSum(room1,i,x,g) > expectsum :
-                    teachers_in_room[room_for_teacher] -= 1
-                    room_for_teacher = room1
-                    teachers_in_room[room1] +=1
-                    expectsum = getSum(room1,i,x,g)
-            sum += expectsum
-            y.append(room_for_teacher)
+            #if all the room has over c teachers, we start using greedy to optimization
+            if AllRoomHasOver_c_teachers(k,teachers_in_room,c):
+                best_option = []
+                for room in y_domain:
+                    best_option.append((room,teachers_in_room[room]))
+                best_option = sorted(best_option,key = lambda x : x[1])
+                room_for_teacher = best_option[0][0]
+                expectsum = getSum(room_for_teacher,i,x,g)
+                teachers_in_room[best_option[0][0]] += 1
+                for room1 in range(1,len(best_option)):
+                    if getSum(room1,i,x,g) > expectsum :
+                        teachers_in_room[room_for_teacher] -= 1
+                        room_for_teacher = room1
+                        teachers_in_room[room1] +=1
+                        expectsum = getSum(room1,i,x,g)
+                sum += expectsum
+                y.append(room_for_teacher)
+            else: #else we want to fill up all the room to at least c teachers first
+                best_option = []
+                for room in y_domain:
+                    best_option.append((room,teachers_in_room[room]))
+                best_option = sorted(best_option,key = lambda x : x[1])
+                room_for_teacher = best_option[0][0]
+                expectsum = getSum(room_for_teacher,i,x,g)
+                teachers_in_room[best_option[0][0]] += 1
+                y.append(room_for_teacher)
+
     if complete:
         return y,sum
     return None
